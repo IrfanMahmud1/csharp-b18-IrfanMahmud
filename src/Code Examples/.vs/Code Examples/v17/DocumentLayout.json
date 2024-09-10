@@ -1,7 +1,12 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\User\\source\\repos\\c# devskill\\csharp-b18-IrfanMahmud\\src\\Code Examples\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{810740D9-9DFE-4FC5-B598-DEBF3F1A19DD}|Assignment2\\Task1\\Task1.csproj|c:\\users\\user\\source\\repos\\c# devskill\\csharp-b18-irfanmahmud\\src\\code examples\\assignment2\\task1\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{810740D9-9DFE-4FC5-B598-DEBF3F1A19DD}|Assignment2\\Task1\\Task1.csproj|solutionrelative:assignment2\\task1\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,7 +14,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Bookmark",
@@ -18,6 +23,19 @@
             {
               "$type": "Bookmark",
               "Name": "ST:129:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\User\\source\\repos\\c# devskill\\csharp-b18-IrfanMahmud\\src\\Code Examples\\Assignment2\\Task1\\Program.cs",
+              "RelativeDocumentMoniker": "Assignment2\\Task1\\Program.cs",
+              "ToolTip": "C:\\Users\\User\\source\\repos\\c# devskill\\csharp-b18-IrfanMahmud\\src\\Code Examples\\Assignment2\\Task1\\Program.cs*",
+              "RelativeToolTip": "Assignment2\\Task1\\Program.cs*",
+              "ViewState": "AgIAAAQAAAAAAAAAAAAQwBQAAABOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-10T18:09:57.509Z",
+              "EditorCaption": ""
             }
           ]
         }
