@@ -1,7 +1,10 @@
-**/.vs
-**/bin
-**/obj
-**/*.user
-**/Logs/*
-
-
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.cache
+*.json
+*.nuget
+obj/
+bin/
