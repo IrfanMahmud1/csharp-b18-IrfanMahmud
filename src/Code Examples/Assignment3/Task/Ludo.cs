@@ -87,27 +87,21 @@ namespace Task
 
                 foreach (var item in Players[player].CurrentPosition)
                 {
-                    if (SRow == ERow && SRow == item.Value.Item1)
+                    if (SCol < ECol && item.Value.Item2 + 3 * dice <= ECol && player == 0)
                     {
-                        if (SCol < ECol && item.Value.Item2 + 3 * dice <= ECol)
-                        {
-                            list.Add(item.Key);
-                        }
-                        else if (SCol > ECol && item.Value.Item2 - 3 * dice >= ECol)
-                        {
-                            list.Add(item.Key);
-                        }
+                        list.Add(item.Key);
                     }
-                    else if (SCol == ECol && SCol == item.Value.Item2)
+                    else if (SRow < ERow && item.Value.Item1 + 3 * dice <= ERow && player == 1)
                     {
-                        if (SRow > ERow && item.Value.Item1 + 3 * dice <= ERow)
-                        {
-                            list.Add(item.Key);
-                        }
-                        else if (SRow < ERow && item.Value.Item1 - 3 * dice >= ERow)
-                        {
-                            list.Add(item.Key);
-                        }
+                        list.Add(item.Key);
+                    }
+                    else if (SCol > ECol && item.Value.Item2 - 3 * dice >= ECol && player == 2)
+                    {
+                        list.Add(item.Key);
+                    }
+                    else if (SRow > ERow && item.Value.Item1 - 3 * dice >= ERow && player == 3)
+                    {
+                        list.Add(item.Key);
                     }
 
                     else
@@ -115,7 +109,7 @@ namespace Task
                         int rw = Players[player].Position[item.Key].Item1;
                         int cl = Players[player].Position[item.Key].Item2;
 
-                        if (rw != item.Value.Item1 || cl != item.Value.Item2 && item.Value != (-1, -1, -1))
+                        if ((rw != item.Value.Item1 || cl != item.Value.Item2 ) && item.Value != (-1, -1, -1))
                         {
                             list.Add(item.Key);
                         }
@@ -235,7 +229,7 @@ namespace Task
         {
             while (!IsFinished())
             {
-                for (int i = 0; i < Players.Count; i++)
+                for (int i = 0; i < 1; i++)
                 {
                     if (!IsWon(i))
                     {
@@ -259,7 +253,7 @@ namespace Task
                             }
                             Console.Write(msg);
                             Console.ReadLine();
-                            diceno = Dice.Roll();
+                            diceno = 6;
                             Console.WriteLine("Your Dice is : " + diceno);
                             List<string> eligible = IsEligible(diceno, i);
 
