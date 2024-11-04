@@ -87,21 +87,33 @@ namespace Task
 
                 foreach (var item in Players[player].CurrentPosition)
                 {
-                    if (SCol < ECol && item.Value.Item2 + 3 * dice <= ECol && player == 0)
+                    if (item.Value.Item2 >= SCol && item.Value.Item2 <= ECol && item.Value.Item1 == SRow && player == 0)
                     {
-                        list.Add(item.Key);
+                        if (item.Value.Item2 + 3 * dice <= ECol)
+                        {
+                            list.Add(item.Key);
+                        }
                     }
-                    else if (SRow < ERow && item.Value.Item1 + 3 * dice <= ERow && player == 1)
+                    else if (item.Value.Item1 >= SRow && item.Value.Item1 <= ERow && item.Value.Item2 == SCol  && player == 1)
                     {
-                        list.Add(item.Key);
+                        if (item.Value.Item1 + 3 * dice <= ERow)
+                        {
+                            list.Add(item.Key);
+                        }
                     }
-                    else if (SCol > ECol && item.Value.Item2 - 3 * dice >= ECol && player == 2)
+                    else if (item.Value.Item2 <= SCol && item.Value.Item2 >= ECol && item.Value.Item1 == SRow  && player == 2)
                     {
-                        list.Add(item.Key);
+                        if (item.Value.Item2 - 3 * dice >= ECol)
+                        {
+                            list.Add(item.Key);
+                        }
                     }
-                    else if (SRow > ERow && item.Value.Item1 - 3 * dice >= ERow && player == 3)
+                    else if (item.Value.Item1 <= SRow && item.Value.Item1 >= ERow && item.Value.Item2 == SCol && player == 3)
                     {
-                        list.Add(item.Key);
+                        if (item.Value.Item1 - 3 * dice >= ERow)
+                        {
+                            list.Add(item.Key);
+                        }
                     }
 
                     else
@@ -229,7 +241,7 @@ namespace Task
         {
             while (!IsFinished())
             {
-                for (int i = 0; i < 1; i++)
+                for (int i = 3; i < 4; i++)
                 {
                     if (!IsWon(i))
                     {

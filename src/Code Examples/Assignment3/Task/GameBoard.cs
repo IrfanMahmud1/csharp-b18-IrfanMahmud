@@ -298,11 +298,11 @@ namespace Assignment3
                                 {
                                     if (guti[0] == 'G')
                                     {
-                                        if (row + 3 * dice < 13)
+                                        if (row + 2 * dice < 13)
                                         {
-                                            row = row + 3 * dice ;
+                                            row = row + 2 * dice ;
                                         }
-                                        else if (row + 3 * dice <= 13)
+                                        else if (row + 2 * dice <= 13)
                                         {
                                             SetSurvivedGuti(guti);
                                             row = -1;
@@ -346,11 +346,11 @@ namespace Assignment3
                                 {
                                     if (guti[0] == 'R')
                                     {
-                                        if (row - 3 * dice < 17)
+                                        if (row - 2 * dice > 17)
                                         {
-                                            row = row - 3 * dice;
+                                            row = row - 2 * dice;
                                         }
-                                        else if (row + 3 * dice <= 17)
+                                        else if (row + 2 * dice >= 17)
                                         {
                                             SetSurvivedGuti(guti);
                                             row = -1;
