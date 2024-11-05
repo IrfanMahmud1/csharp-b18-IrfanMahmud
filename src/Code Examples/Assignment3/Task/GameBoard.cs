@@ -82,6 +82,7 @@ namespace Assignment3
            */
         }
 
+        //Getting start positions of players
         public (int, int, int) GetPositions(char key)
         {
             (int, int, int) pos;
@@ -104,6 +105,7 @@ namespace Assignment3
             return pos;
         }
 
+        //Getting Initial positions of players
         public List<(int, int, int)> GetPositions(int player)
         {
             List<(int, int, int)> pos = new List<(int, int, int)>();
@@ -126,27 +128,33 @@ namespace Assignment3
             return pos;
         }
 
-
-        public void SetSurvivedGuti(string guti)
+        //Getting Survived positions of players
+        public (int,int,int) GetPositions(string guti)
         {
-            int row;
+            int row,col;
             if (guti[0] == 'Y') row = 14;
             else if (guti[0] == 'G') row = 13;
             else if (guti[0] == 'B') row = 17;
             else row = 16;
 
 
-            int i;
-            for (i = 19; i <= 25; i += 2)
+            if (guti[1] == '1')
             {
-                if (board[row][i] == ' ')
-                {
-                    board[row][i] = guti[0];
-                    board[row][i + 1] = guti[1];
-                    return;
-
-                }
+                col = 19;
             }
+            else if (guti[1] == '1')
+            {
+                col = 21;
+            }
+            else if (guti[1] == '1')
+            {
+                col = 23;
+            }
+            else
+            {
+                col = 25;
+            }
+            return (row, col, col + 1);
         }
         public (int, int, int) MoveGuti(int dice, string guti, (int, int, int) pos)
         {
@@ -183,17 +191,10 @@ namespace Assignment3
                                 }
                                 else if (col1 + 3 * dice == 19)
                                 {
-                                    SetSurvivedGuti(guti);
-                                    row = -1;
-                                    col1 = -2;
+                                    position = GetPositions(guti);
+                                    row = position.Item1;
+                                    col1 = position.Item2;
                                 }
-                                /* else
-                                 {
-                                     row = -2;
-                                     col1 = -2;
-                                     col2 = -2;
-                                     break;
-                                 }*/
                                 dice -= dice;
                             }
                             else
@@ -239,17 +240,10 @@ namespace Assignment3
                                 }
                                 else if (col1 + 3 * dice == 25)
                                 {
-                                    SetSurvivedGuti(guti);
-                                    row = -1;
-                                    col1 = -2;
+                                    position = GetPositions(guti);
+                                    row = position.Item1;
+                                    col1 = position.Item2;
                                 }
-                                /* else
-                                 {
-                                     row = -2;
-                                     col1 = -2;
-                                     col2 = -2;
-                                     break;
-                                 }*/
                                 dice -= dice;
                             }
                             else
@@ -304,9 +298,9 @@ namespace Assignment3
                                         }
                                         else if (row + 2 * dice <= 13)
                                         {
-                                            SetSurvivedGuti(guti);
-                                            row = -1;
-                                            col1 = -2;
+                                            position = GetPositions(guti);
+                                            row = position.Item1;
+                                            col1 = position.Item2;
                                         }
                                         dice -= dice;
                                     }
@@ -352,9 +346,9 @@ namespace Assignment3
                                         }
                                         else if (row + 2 * dice >= 17)
                                         {
-                                            SetSurvivedGuti(guti);
-                                            row = -1;
-                                            col1 = -2;
+                                            position = GetPositions(guti);
+                                            row = position.Item1;
+                                            col1 = position.Item2;
                                         }
                                         dice -= dice;
                                     }
@@ -382,9 +376,9 @@ namespace Assignment3
                     }
                 }
             }
-            col2 = col1 + 1;
+/*            col2 = col1 + 1;
             board[row][col1] = guti[0];
-            board[row][col2] = guti[1];
+            board[row][col2] = guti[1];*/
 
             return (row, col1, col1 + 1);
         }

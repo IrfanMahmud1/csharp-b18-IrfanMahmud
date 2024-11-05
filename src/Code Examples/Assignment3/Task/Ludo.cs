@@ -29,63 +29,50 @@ namespace Task
 
         public List<string> IsEligible(int dice, int player)
         {
-            var b = Board.board;
             List<String> list = new List<String>();
-            int cnt = 0, row = 0, col = 0;
-            char c = ' ';
 
 
             List<(int, int, int)> pos = Board.GetPositions(player);
 
-            row = pos[0].Item1;
-            col = pos[0].Item2;
-            if (dice == 6)
-            {
-                for (int m = row; m <= row + 1; m++)
-                {
-                    for (int n = col; n <= col + 3; n += 3)
-                    {
-                        if (b[m][n] != ' ')
-                        {
-                            list.Add(b[m][n] + "" + b[m][n + 1]);
-                        }
-                    }
-                }
-            }
-            if (list.Count < 4 && dice <= 6)
-            {
-                int SRow = 0, SCol = 0, ERow = 0, ECol = 0;
 
-                if (player == 0)
+            int SRow = 0, SCol = 0, ERow = 0, ECol = 0, i = 0;
+
+            if (player == 0)
+            {
+                SRow = 15;
+                ERow = 15;
+                SCol = 1;
+                ECol = 19;
+            }
+            else if (player == 1)
+            {
+                SRow = 1;
+                ERow = 13;
+                SCol = 22;
+                ECol = 22;
+            }
+            else if (player == 2)
+            {
+                SRow = 15;
+                ERow = 15;
+                SCol = 43;
+                ECol = 25;
+            }
+            else
+            {
+                SRow = 29;
+                ERow = 17;
+                SCol = 22;
+                ECol = 22;
+            }
+
+            foreach (var item in Players[player].CurrentPosition)
+            {
+                if (item.Value == pos[i] && dice == 6)
                 {
-                    SRow = 15;
-                    ERow = 15;
-                    SCol = 1;
-                    ECol = 19;
-                }
-                else if (player == 1)
-                {
-                    SRow = 1;
-                    ERow = 13;
-                    SCol = 22;
-                    ECol = 22;
-                }
-                else if (player == 2)
-                {
-                    SRow = 15;
-                    ERow = 15;
-                    SCol = 43;
-                    ECol = 25;
+                    list.Add(item.Key);
                 }
                 else
-                {
-                    SRow = 29;
-                    ERow = 17;
-                    SCol = 22;
-                    ECol = 22;
-                }
-
-                foreach (var item in Players[player].CurrentPosition)
                 {
                     if (item.Value.Item2 >= SCol && item.Value.Item2 <= ECol && item.Value.Item1 == SRow && player == 0)
                     {
@@ -94,14 +81,14 @@ namespace Task
                             list.Add(item.Key);
                         }
                     }
-                    else if (item.Value.Item1 >= SRow && item.Value.Item1 <= ERow && item.Value.Item2 == SCol  && player == 1)
+                    else if (item.Value.Item1 >= SRow && item.Value.Item1 <= ERow && item.Value.Item2 == SCol && player == 1)
                     {
-                        if (item.Value.Item1 + 3 * dice <= ERow)
+                        if (item.Value.Item1 + 2 * dice <= ERow)
                         {
                             list.Add(item.Key);
                         }
                     }
-                    else if (item.Value.Item2 <= SCol && item.Value.Item2 >= ECol && item.Value.Item1 == SRow  && player == 2)
+                    else if (item.Value.Item2 <= SCol && item.Value.Item2 >= ECol && item.Value.Item1 == SRow && player == 2)
                     {
                         if (item.Value.Item2 - 3 * dice >= ECol)
                         {
@@ -110,7 +97,7 @@ namespace Task
                     }
                     else if (item.Value.Item1 <= SRow && item.Value.Item1 >= ERow && item.Value.Item2 == SCol && player == 3)
                     {
-                        if (item.Value.Item1 - 3 * dice >= ERow)
+                        if (item.Value.Item1 - 2 * dice >= ERow)
                         {
                             list.Add(item.Key);
                         }
@@ -118,15 +105,14 @@ namespace Task
 
                     else
                     {
-                        int rw = Players[player].Position[item.Key].Item1;
-                        int cl = Players[player].Position[item.Key].Item2;
-
-                        if ((rw != item.Value.Item1 || cl != item.Value.Item2 ) && item.Value != (-1, -1, -1))
+                        bool isSurvived = Players[player].SurvivedGuties.Any(x => x == item.Key);
+                        if (!isSurvived)
                         {
                             list.Add(item.Key);
                         }
                     }
                 }
+                i++;
             }
 
             return list;
@@ -152,73 +138,73 @@ namespace Task
             return cnt == 4;
         }
 
-        public void OrganizeStartPositionGuties(string guti, int player, (int, int, int) pos)
-        {
-            int start = 0, end = 0,col = 0;
-            var b = Board.board;
-            if (player == 0)
-            {
-                start = pos.Item1 - 2;
-                col = pos.Item2;
-                end = 1;
-            }
-            else if (player == 1)
-            {
-                start = 11;
-                col = pos.Item2 + 4;
-                end = 1;
-            }
-            else if (player == 2)
-            {
-                start = 29;
-                col = pos.Item2;
-                end = pos.Item1 + 2;
-            }
-            else
-            {
-                start = 29;
-                col = pos.Item2 - 4;
-                end = 19;
-            }
+        //public void OrganizeStartPositionGuties(string guti, int player, (int, int, int) pos)
+        //{
+        //    int start = 0, end = 0, col = 0;
+        //    var b = Board.board;
+        //    if (player == 0)
+        //    {
+        //        start = pos.Item1 - 2;
+        //        col = pos.Item2;
+        //        end = 1;
+        //    }
+        //    else if (player == 1)
+        //    {
+        //        start = 11;
+        //        col = pos.Item2 + 4;
+        //        end = 1;
+        //    }
+        //    else if (player == 2)
+        //    {
+        //        start = 29;
+        //        col = pos.Item2;
+        //        end = pos.Item1 + 2;
+        //    }
+        //    else
+        //    {
+        //        start = 29;
+        //        col = pos.Item2 - 4;
+        //        end = 19;
+        //    }
 
-            bool check = Players[player].StartPosition[pos].Any(x => x == guti);
+        //    bool check = Players[player].StartPosition[pos].Any(x => x == guti);
 
-            for (int i = start; i >= end; i--)
-            {
-                if (check)
-                {
-                    if (b[pos.Item1][pos.Item2] == guti[0] && b[pos.Item1][pos.Item3] == guti[1])
-                    {
-                        b[pos.Item1][pos.Item2] = ' ';
-                        b[pos.Item1][pos.Item2] = ' ';
-                        break;
-                    }
-                    else
-                    {
-                        if (b[i][col] == guti[0] && b[i][col + 1] == guti[1])
-                        {
-                            b[i][col] = ' ';
-                            b[i][col + 1] = ' ';
-                            break;
-                        }
-                    }
-                }
-                else
-                {
-                    if (b[pos.Item1][pos.Item2] != ' ')
-                    {
-                        if (b[i][col] == ' ')
-                        {
-                            b[i][col] = b[pos.Item1][pos.Item2];
-                            b[i][col + 1] = b[pos.Item1][pos.Item3];
-                        }
-                    }
-                    b[pos.Item1][pos.Item2] = guti[0];
-                    b[pos.Item1][pos.Item3] = guti[1];
-                    break;
-                }
-            }
-        }
+        //    for (int i = start; i >= end; i--)
+        //    {
+        //        if (check)
+        //        {
+        //            if (b[pos.Item1][pos.Item2] == guti[0] && b[pos.Item1][pos.Item3] == guti[1])
+        //            {
+        //                b[pos.Item1][pos.Item2] = ' ';
+        //                b[pos.Item1][pos.Item2] = ' ';
+        //                break;
+        //            }
+        //            else
+        //            {
+        //                if (b[i][col] == guti[0] && b[i][col + 1] == guti[1])
+        //                {
+        //                    b[i][col] = ' ';
+        //                    b[i][col + 1] = ' ';
+        //                    break;
+        //                }
+        //            }
+        //        }
+        //        else
+        //        {
+        //            if (b[pos.Item1][pos.Item2] != ' ')
+        //            {
+        //                if (b[i][col] == ' ')
+        //                {
+        //                    b[i][col] = b[pos.Item1][pos.Item2];
+        //                    b[i][col + 1] = b[pos.Item1][pos.Item3];
+        //                }
+        //            }
+        //            b[pos.Item1][pos.Item2] = guti[0];
+        //            b[pos.Item1][pos.Item3] = guti[1];
+        //            break;
+        //        }
+        //    }
+        //}
         public bool IsFree(string guti, int player, (int, int, int) pos)
         {
             var b = Board.board;
@@ -227,15 +213,51 @@ namespace Task
 
             if (initial == current)
             {
-                OrganizeStartPositionGuties(guti, player, pos);
+                //OrganizeStartPositionGuties(guti, player, pos);
                 Players[player].StartPosition[pos].Add(guti);
                 Players[player].CurrentPosition[guti] = pos;
+                Players[player].Position[guti] = (0,0,0);
 
-                b[initial.Item1][initial.Item2] = ' ';
-                b[initial.Item1][initial.Item3] = ' ';
+                /*                b[initial.Item1][initial.Item2] = ' ';
+                                b[initial.Item1][initial.Item3] = ' ';*/
                 return false;
             }
             return true;
+        }
+
+        public void MovePawn(int dice, string guti, int player)
+        {
+            List<char> chars = new List<char>()
+                {
+                    'Y','G','B','R'
+                };
+            for (int i = 0; i < 4; i++)
+            {
+                var position = Players[i].StartPosition[Board.GetPositions(chars[i])];
+                if (position.Any(x => x == guti))
+                {
+                    position.Remove(guti);
+                }
+            }
+            (int, int, int) pos = Board.MoveGuti(dice, guti, Players[player].CurrentPosition[guti]);
+            
+
+            Players[player].CurrentPosition[guti] = pos;
+            if (pos == Board.GetPositions(guti))
+            {
+                Players[player].SurvivedGuties.Add(guti);
+            }
+            else
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    var position = Board.GetPositions(chars[i]);
+                    if (position == pos)
+                    {
+                        Players[i].StartPosition[pos].Add(guti);
+                    }
+                }
+            }
         }
         public void Play()
         {
@@ -299,45 +321,7 @@ namespace Task
                                 }
                                 if (isfree)
                                 {
-                                    (int, int, int) pos = Board.MoveGuti(diceno, guti, Players[i].CurrentPosition[guti]);
-                                    /* while (true)
-                                     {
-                                         if (pos == (-2, -2, -2))
-                                         {
-                                             pos = Board.MoveGuti(diceno, guti, Players[i].CurrentPosition[guti]);
-                                         }
-                                         else
-                                         {
-                                             break;
-                                         }
-
-                                     }*/
-                                    Players[i].CurrentPosition[guti] = pos;
-                                    if (pos == (-1, -1, -1))
-                                    {
-                                        Players[i].SurvivedGuties.Add(guti);
-                                    }
-                                    else
-                                    {
-                                        for (int j = 0; j < 4; j++)
-                                        {
-                                            foreach (var x in Players[j].StartPosition)
-                                            {
-                                                if (x.Value.Any(x => x == guti))
-                                                {
-                                                    //OrganizeStartPositionGuties(guti, j, x.Key);
-                                                    x.Value.Remove(guti);
-                                                    break;
-                                                }
-                                                if (x.Key == pos)
-                                                {
-                                                    //OrganizeStartPositionGuties(guti, j, x.Key);
-                                                    x.Value.Add(guti);
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                    }
+                                    MovePawn(diceno, guti, i);
                                 }
                             }
 
