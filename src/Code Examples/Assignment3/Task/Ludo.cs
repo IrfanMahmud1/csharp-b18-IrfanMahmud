@@ -17,6 +17,7 @@ namespace Task
 
         private readonly List<char> chars;
 
+        protected int? NumberOfPlayers { get; set; }
         protected int Rank { get; set; }
         public Ludo()
         {
@@ -143,11 +144,11 @@ namespace Task
                     cnt++;
                 }
             }
-            if (cnt == 3)
+            if (cnt == NumberOfPlayers - 1)
             {
                 Print("The game is over!");
             }
-            return cnt >= 3;
+            return cnt >= NumberOfPlayers - 1;
         }
         private bool IsWon(int player)
         {
@@ -205,11 +206,13 @@ namespace Task
             }
             else
             {
+                bool isStartPos = false;
                 for (int i = 0; i < 4; i++)
                 {
                     var position = Board.GetPositions(chars[i]);
                     if (position == pos)
                     {
+                        isStartPos = true;
                         Players[i].StartPosition[pos].Add(guti);
                         break;
                     }
@@ -222,7 +225,7 @@ namespace Task
                     (3,19,20),(13,40,41),(27,25,26),(17,4,5)
                 };
                 bool flag = false;
-                if (!InitialPos.Any(x => x == pos) && !SafePos.Any(x => x == pos))
+                if (!InitialPos.Any(x => x == pos) && !SafePos.Any(x => x == pos) && !isStartPos)
                 {
                     for (int i = 0; i < 4; i++)
                     {
@@ -500,9 +503,19 @@ namespace Task
         }
         public void Play()
         {
+            Print("Enter number of players : ");
+            while (true)
+            {
+                NumberOfPlayers = int.Parse(Read());
+                if (NumberOfPlayers >= 2)
+                {
+                    break;
+                }
+                Print("Invalid! Please select atleast 2 player");
+            }
             while (!IsFinished())
             {
-                for (int i = 0; i < 2; i++)
+                for (int i = 0; i < NumberOfPlayers; i++)
                 {
                     if (!IsWon(i))
                     {
