@@ -8,10 +8,15 @@ namespace Assignment3
 {
     internal class Dice
     {
-        public static int Roll()
+        public Random _Random {get;set;}
+
+        public Dice()
         {
-            Random random = new Random();
-            return random.Next(1, 7);
+            _Random = new Random();
+        }
+        public int Roll(int a = 1, int b = 7)
+        {
+            return _Random.Next(a, b);
         }
     }
 }

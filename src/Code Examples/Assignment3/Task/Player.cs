@@ -9,15 +9,18 @@ namespace Assignment3
     internal class Player
     {
         public string Name { get; set; }
+
+        public string Color { get; set; }
         public Dictionary<string, (int,int,int)> Position { get; set; }
 
         public Dictionary<string,(int,int,int)>CurrentPosition { get; set; }
         public Dictionary<(int,int,int),List<string>> StartPosition { get; set; }
 
         public List<string> SurvivedGuties { get; set; }
-        public Player(string name, string key, List<(int,int,int)> pos, (int,int,int) pos2)
+        public Player(string name,string color, string key, List<(int,int,int)> pos, (int,int,int) pos2)
         {
             Name = name;
+            Color = color;
             Position = new Dictionary<string, (int, int, int)>();
             for (int i = 1; i <= pos.Count; i++)
             {

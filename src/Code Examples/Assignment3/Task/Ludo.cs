@@ -17,16 +17,20 @@ namespace Task
 
         private readonly List<char> chars;
 
+        protected int Rank { get; set; }
         public Ludo()
         {
+            Rank = 1;
             Board = new GameBoard();
             Players = new List<Player>()
             {
-                new Player("Irfan","Y",Board.GetPositions(0),Board.GetPositions('Y')),
-                new Player("Mahmud","G",Board.GetPositions(1),Board.GetPositions('G')),
-                new Player("Ashik","B",Board.GetPositions(2),Board.GetPositions('B')),
-                new Player("AI","R",Board.GetPositions(3),Board.GetPositions('R')),
+                new Player("Irfan","YELLOW","Y",Board.GetPositions(0),Board.GetPositions('Y')),
+                new Player("Mahmud","GREEN", "G",Board.GetPositions(1),Board.GetPositions('G')),
+                new Player("Ashik","BLUE", "B",Board.GetPositions(2),Board.GetPositions('B')),
+                new Player("AI","RED", "R",Board.GetPositions(3),Board.GetPositions('R')),
             };
+
+            Dice = new Dice();
 
             chars = new List<char>()
                 {
@@ -75,9 +79,12 @@ namespace Task
 
             foreach (var item in Players[player].CurrentPosition)
             {
-                if (item.Value == pos[i] && dice == 6)
+                if (item.Value == pos[i])
                 {
-                    list.Add(item.Key);
+                    if (dice == 6)
+                    {
+                        list.Add(item.Key);
+                    }
                 }
                 else
                 {
@@ -136,82 +143,21 @@ namespace Task
                     cnt++;
                 }
             }
-
+            if (cnt == 3)
+            {
+                Print("The game is over!");
+            }
             return cnt >= 3;
         }
         private bool IsWon(int player)
         {
             int cnt = Players[player].SurvivedGuties.Count();
+            if (cnt == 4)
+            {
+                Print(Players[player].Name + " is the winner and got a Rank : " + Rank);
+            }
             return cnt == 4;
         }
-
-        //public void OrganizeStartPositionGuties(string guti, int player, (int, int, int) pos)
-        //{
-        //    int start = 0, end = 0, col = 0;
-        //    var b = Board.board;
-        //    if (player == 0)
-        //    {
-        //        start = pos.Item1 - 2;
-        //        col = pos.Item2;
-        //        end = 1;
-        //    }
-        //    else if (player == 1)
-        //    {
-        //        start = 11;
-        //        col = pos.Item2 + 4;
-        //        end = 1;
-        //    }
-        //    else if (player == 2)
-        //    {
-        //        start = 29;
-        //        col = pos.Item2;
-        //        end = pos.Item1 + 2;
-        //    }
-        //    else
-        //    {
-        //        start = 29;
-        //        col = pos.Item2 - 4;
-        //        end = 19;
-        //    }
-
-        //    bool check = Players[player].StartPosition[pos].Any(x => x == guti);
-
-        //    for (int i = start; i >= end; i--)
-        //    {
-        //        if (check)
-        //        {
-        //            if (b[pos.Item1][pos.Item2] == guti[0] && b[pos.Item1][pos.Item3] == guti[1])
-        //            {
-        //                b[pos.Item1][pos.Item2] = ' ';
-        //                b[pos.Item1][pos.Item2] = ' ';
-        //                break;
-        //            }
-        //            else
-        //            {
-        //                if (b[i][col] == guti[0] && b[i][col + 1] == guti[1])
-        //                {
-        //                    b[i][col] = ' ';
-        //                    b[i][col + 1] = ' ';
-        //                    break;
-        //                }
-        //            }
-        //        }
-        //        else
-        //        {
-        //            if (b[pos.Item1][pos.Item2] != ' ')
-        //            {
-        //                if (b[i][col] == ' ')
-        //                {
-        //                    b[i][col] = b[pos.Item1][pos.Item2];
-        //                    b[i][col + 1] = b[pos.Item1][pos.Item3];
-        //                }
-        //            }
-        //            b[pos.Item1][pos.Item2] = guti[0];
-        //            b[pos.Item1][pos.Item3] = guti[1];
-        //            break;
-        //        }
-        //    }
-        //}
         private bool IsFree(string guti, int player, (int, int, int) pos)
         {
             var b = Board.board;
@@ -222,7 +168,7 @@ namespace Task
             {
                 Players[player].StartPosition[pos].Add(guti);
                 Players[player].CurrentPosition[guti] = pos;
-                Players[player].Position[guti] = (initial.Item1,initial.Item2,initial.Item2);
+                Players[player].Position[guti] = (initial.Item1, initial.Item2, initial.Item2);
                 if (b[pos.Item1][pos.Item2] == ' ')
                 {
                     b[pos.Item1][pos.Item2] = guti[0];
@@ -253,8 +199,6 @@ namespace Task
             }
             (int, int, int) pos = Board.MoveGuti(dice, guti, Players[player].CurrentPosition[guti]);
 
-
-            Players[player].CurrentPosition[guti] = pos;
             if (pos == Board.GetPositions(guti))
             {
                 Players[player].SurvivedGuties.Add(guti);
@@ -270,7 +214,37 @@ namespace Task
                         break;
                     }
                 }
+
+
+                List<(int, int, int)> InitialPos = GetInitialPosition();
+                List<(int, int, int)> SafePos = new List<(int, int, int)>()
+                {
+                    (3,19,20),(13,40,41),(27,25,26),(17,4,5)
+                };
+                bool flag = false;
+                if (!InitialPos.Any(x => x == pos) && !SafePos.Any(x => x == pos))
+                {
+                    for (int i = 0; i < 4; i++)
+                    {
+                        foreach (var x in Players[i].CurrentPosition)
+                        {
+                            if (x.Value == pos)
+                            {
+                                flag = true;
+                                (int, int, int) u = Players[i].Position[x.Key];
+                                Players[i].Position[x.Key] = (u.Item1, u.Item2, u.Item2 + 1);
+                                Players[i].CurrentPosition[x.Key] = (u.Item1, u.Item2, u.Item2 + 1);
+                                break;
+                            }
+                        }
+                        if (flag == true)
+                        {
+                            break;
+                        }
+                    }
+                }
             }
+            Players[player].CurrentPosition[guti] = pos;
         }
 
         private void SetInitialPositions()
@@ -280,7 +254,7 @@ namespace Task
             {
                 foreach (var j in Players[i].Position)
                 {
-                    if (j.Value != (j.Value.Item1,j.Value.Item2,j.Value.Item2))
+                    if (j.Value != (j.Value.Item1, j.Value.Item2, j.Value.Item2))
                     {
                         b[j.Value.Item1][j.Value.Item2] = j.Key[0];
                         b[j.Value.Item1][j.Value.Item3] = j.Key[1];
@@ -334,10 +308,10 @@ namespace Task
                 int s = start;
                 while (s >= end)
                 {
-                    if (b[s][col] == ' ')
+                    /*if (b[s][col] == ' ')
                     {
                         break;
-                    }
+                    }*/
                     b[s][col] = ' ';
                     b[s][col + 1] = ' ';
                     s--;
@@ -345,14 +319,14 @@ namespace Task
 
                 foreach (var it in Players[i].StartPosition[pos])
                 {
-                    if (b[pos.Item1][pos.Item2] == ' ' && it[0] == c)
+                    if (b[pos.Item1][pos.Item2] == ' ')
                     {
                         b[pos.Item1][pos.Item2] = it[0];
                         b[pos.Item1][pos.Item3] = it[1];
                     }
                     else
                     {
-                        if (start >= end  && b[pos.Item1][pos.Item3] != it[1])
+                        if (start >= end && b[pos.Item1][pos.Item3] != it[1])
                         {
                             b[start][col] = it[0];
                             b[start][col + 1] = it[1];
@@ -364,15 +338,49 @@ namespace Task
         }
         private void SetSurvivedPositions()
         {
-
+            var b = Board.board;
+            int row = 0, col = 0;
+            for (int i = 0; i < 4; i++)
+            {
+                if (i == 0) row = 14;
+                else if (i == 1) row = 13;
+                else if (i == 2) row = 17;
+                else row = 16;
+                col = 19;
+                foreach (var pos in Players[i].SurvivedGuties)
+                {
+                    b[row][col] = pos[0];
+                    b[row][col + 1] = pos[1];
+                    col += 2;
+                }
+            }
         }
 
+        private List<(int, int, int)> GetStartPosition()
+        {
+            List<(int, int, int)> StartPos = new List<(int, int, int)>();
+            for (int i = 0; i < 4; i++)
+            {
+                StartPos.Add(Board.GetPositions(chars[i]));
+            }
+            return StartPos;
+        }
+        private List<(int, int, int)> GetInitialPosition()
+        {
+
+            List<(int, int, int)> InitialPos = new List<(int, int, int)>();
+            for (int i = 0; i < 4; i++)
+            {
+                foreach (var j in Board.GetPositions(i))
+                {
+                    InitialPos.Add(j);
+                }
+            }
+            return InitialPos;
+        }
         private void SetCurrentPositions()
         {
             var b = Board.board;
-
-            List<(int, int, int)> StartPos = new List<(int, int, int)>();
-            List<(int, int, int)> InitialPos = new List<(int, int, int)>();
 
             int start = 0, end = 0, line = 0;
             char c;
@@ -427,7 +435,7 @@ namespace Task
                             b[line + 4][j + 1] = ' ';
                         }
 
-                        
+
                         j += 3;
                     }
                     else
@@ -437,7 +445,7 @@ namespace Task
                             b[j][line] = ' ';
                             b[j][line + 1] = ' ';
                         }
-                          
+
                         b[j][line + 3] = ' ';
                         b[j][line + 4] = ' ';
 
@@ -446,22 +454,19 @@ namespace Task
                             b[j][line + 6] = ' ';
                             b[j][line + 7] = ' ';
                         }
-                            
+
                         j += 2;
                     }
                 }
             }
+
+
+            List<(int, int, int)> StartPos = GetStartPosition();
+            List<(int, int, int)> InitialPos = GetInitialPosition();
+
             for (int i = 0; i < 4; i++)
             {
-                StartPos.Add(Board.GetPositions(chars[i]));
-                foreach (var j in Board.GetPositions(i))
-                {
-                    InitialPos.Add(j);
-                }
-            }
-            for (int i = 0; i < 4; i++)
-            {
-                
+
                 foreach (var po in Players[i].CurrentPosition)
                 {
                     if (StartPos.Any(x => x == po.Value) || InitialPos.Any(x => x == po.Value) || po.Value.Item1 >= 13 && po.Value.Item1 <= 17 && po.Value.Item2 >= 19 && po.Value.Item2 <= 25)
@@ -478,6 +483,7 @@ namespace Task
             SetInitialPositions();
             SetStartPositions();
             SetCurrentPositions();
+            SetSurvivedPositions();
         }
 
         private string Read()
@@ -496,7 +502,7 @@ namespace Task
         {
             while (!IsFinished())
             {
-                for (int i = 1; i < 2; i++)
+                for (int i = 0; i < 2; i++)
                 {
                     if (!IsWon(i))
                     {
@@ -513,15 +519,15 @@ namespace Task
                             string msg = "";
                             if (diceno == 6)
                             {
-                                msg = "Player " + (i + 1).ToString() + " " + Players[i].Name + " To roll your Dice Press Enter again : ";
+                                msg = "Player " + Players[i].Color + " " + Players[i].Name + " To roll your Dice Press Enter again : ";
                             }
                             else
                             {
-                                msg = "Player " + (i + 1).ToString() + " " + Players[i].Name + " To roll your Dice Press Enter : ";
+                                msg = "Player " + Players[i].Color + " " + Players[i].Name + " To roll your Dice Press Enter : ";
                             }
                             Console.Write(msg);
                             string s = Console.ReadLine();
-                            diceno = 6;
+                            diceno = Dice.Roll();
                             Print("Your Dice is : " + diceno);
                             List<string> eligible = IsEligible(diceno, i);
 
@@ -529,17 +535,30 @@ namespace Task
 
                             if (eligible.Count > 1)
                             {
-                                Console.Write("Enter your guti: ");
+                                if (i != 3)
+                                {
+                                    Console.Write("Enter your guti: ");
+                                }
                                 bool flag;
                                 while (true)
                                 {
-                                    guti = Read().Trim().ToUpper();
+                                    if (i != 3)
+                                    {
+                                        guti = Read().Trim().ToUpper();
+                                    }
+                                    else
+                                    {
+                                        guti = "R" + "" + Dice.Roll(1, 5);
+                                    }
                                     flag = eligible.Any(x => x == guti);
                                     if (flag)
                                     {
                                         break;
                                     }
-                                    Print("Not eligible! Please type again");
+                                    if (i != 3)
+                                    {
+                                        Print("Not eligible! Please type again");
+                                    }
                                 }
                             }
                             else if (eligible.Count == 1)
