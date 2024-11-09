@@ -507,11 +507,11 @@ namespace Task
             while (true)
             {
                 NumberOfPlayers = int.Parse(Read());
-                if (NumberOfPlayers >= 2)
+                if (NumberOfPlayers >= 2 && NumberOfPlayers <=4)
                 {
                     break;
                 }
-                Print("Invalid! Please select atleast 2 player");
+                Print("Invalid! Please select between 2 and 4");
             }
             while (!IsFinished())
             {
