@@ -11,6 +11,7 @@ namespace Assignment3
     {
         public StringBuilder[] board { get; set; }
 
+        //Designing the Gameboard
         public GameBoard()
         {
             board = new StringBuilder[31];
