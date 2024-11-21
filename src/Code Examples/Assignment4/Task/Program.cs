@@ -3,5 +3,5 @@ using Task;
 
 Console.WriteLine("Hello, World!");
 
-Application application = new Application();
+Application application = new Application(new ApplicationDbContext());
 application.Start();

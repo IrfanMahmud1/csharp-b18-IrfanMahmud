@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -30,6 +31,16 @@ namespace Task
 
         public void WriteLine(string path, string[] text)
         {
+            if (string.IsNullOrEmpty(path))
+            {
+                return;
+            }
+
+            string directory = Directory.GetCurrentDirectory();
+            if (!string.IsNullOrEmpty(directory))
+            {
+                Directory.SetCurrentDirectory(directory);
+            }
             File.WriteAllLines(path, text);
         }
 
@@ -40,9 +51,14 @@ namespace Task
             return path;
         }
 
+        public string[] GetFileData()
+        {
+            return File.ReadAllLines(fileName.ToString());
+        }
+
         public string[] SelectData()
         {
-            string[] textLine = [];
+            string[] textLine = new string[4];
             textLine[0] = "Abdullah 39 3.5";
             textLine[1] = "Hasan 34 4.2";
             textLine[2] = "Mamun 44 3.9";
