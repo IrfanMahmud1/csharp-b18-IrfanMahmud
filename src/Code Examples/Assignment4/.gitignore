@@ -1,0 +1,10 @@
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.cache
+*.json
+*.nuget
+obj/
+bin/
